@@ -21,15 +21,10 @@ const expressServer = app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
 
-// create a new Socket.IO server instance and binds it to the HTTP server.
+// create a new Socket.io server instance and binds it to the Express server.
+// CORS is not required, as the Express server is serving the HTML content and the static files.
 const io = new Server(expressServer, {
   /* options */
-  cors: {
-    origin:
-      process.env.NODE_ENV === 'production'
-        ? false
-        : [`http://localhost:5500`, `http://127.0.0.1:5500`], // 5500 is the default PORT value for VS Code Live Server.
-  },
 });
 
 // event handler that is triggered whenever a new client establishes a WebSocket connection with the Socket.io server.
