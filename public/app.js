@@ -41,7 +41,14 @@ socket.on('message', (data) => {
   document.querySelector('ul').appendChild(li);
 });
 
-// add an event listener to incoming typing events.
+// add an event listener to incoming typing events, with an activity timer.
+let activityTimer;
 socket.on('typing', (name) => {
   typing.textContent = `${name} is typing...`;
+
+  // Clear after 3 seconds
+  clearTimeout(activityTimer);
+  activityTimer = setTimeout(() => {
+    typing.textContent = '';
+  },3000);
 });
