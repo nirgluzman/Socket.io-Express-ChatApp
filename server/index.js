@@ -1,16 +1,28 @@
-import { createServer } from 'http';
+import express from 'express';
 import { Server } from 'socket.io';
+import path from 'path'; // needed for serving static files.
 
 const PORT = process.env.PORT || 3000;
 
-// Server Initialization
-// https://socket.io/docs/v4/server-initialization/#with-an-http-server
+// Server initialization with Express, https://socket.io/docs/v4/server-initialization/#with-express
 
-// create a new HTTP server instance and binds it to the specified port.
-const httpServer = createServer();
+// create a new Express server instance.
+const app = express();
+
+// serve static files from the 'public' directory.
+// 'process.cwd()' to return the current working directory of the Node.js process.
+app.use(express.static(path.join(process.cwd(), 'public')));
+
+// middleware to parse and handle URL-encoded data submitted through HTML forms.
+app.use(express.urlencoded({ extended: true }));
+
+// start the Express server and listen for incoming connections on PORT.
+const expressServer = app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});
 
 // create a new Socket.IO server instance and binds it to the HTTP server.
-const io = new Server(httpServer, {
+const io = new Server(expressServer, {
   /* options */
   cors: {
     origin:
@@ -39,9 +51,4 @@ io.on('connection', (socket) => {
   socket.on('disconnect', (reason) => {
     console.log(`User ${socket.id} disconnected! ${reason}`);
   });
-});
-
-// start the HTTP server and listen for incoming connections.
-httpServer.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
 });

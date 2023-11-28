@@ -1,4 +1,4 @@
-Socket.io - Chat App with Express
+Socket.io - Chat App with Express, Frontend is served fron Node.js
 https://www.youtube.com/watch?v=ypqs_u9GbpQ
 https://github.com/gitdagray/build-chat-app
 
@@ -9,6 +9,10 @@ git@github.com:nirgluzman/Socket.io-Express-ChatApp.git
 
 Socket.io
 https://socket.io/
+
+
+Server initialization with Express
+https://socket.io/docs/v4/server-initialization/#with-express
 
 
 Client API
