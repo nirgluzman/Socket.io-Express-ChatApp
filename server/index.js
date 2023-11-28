@@ -31,19 +31,29 @@ const io = new Server(expressServer, {
 io.on('connection', (socket) => {
   console.log(`User ${socket.id} connected!`);
 
-  // message event
+  // Upon connection - send a welcome message ONLY to the new user.
+  socket.emit('message', 'Welcome to Chat App!');
+
+  // Upon connection - send a message to ALL clients excl. the new user.
+  socket.broadcast.emit('message', `${socket.id.substring(0, 5)} has joined!`);
+
+  // Listening for a message event.
   socket.on('message', (data) => {
     console.log(`Received message: ${data}`);
-
     // send a message to all clients, include sender.
     io.emit('message', `${socket.id.substring(0, 5)}: ${data}`);
-
-    // send a message only to sender.
-    socket.emit('message', `You: ${data}`);
   });
 
-  // event handler for 'disconnect' event (either client or server-side).
+  // Listening for a typing event.
+  socket.on('typing', (name) => {
+    console.log(`${name} is typing ...`);
+    // send a message to all clients, excl. sender.
+    socket.broadcast.emit('typing', name);
+  });
+
+  // when user disconnects - message to others.
   socket.on('disconnect', (reason) => {
     console.log(`User ${socket.id} disconnected! ${reason}`);
+    socket.broadcast.emit('message', `${socket.id.substring(0, 5)} has left!`);
   });
 });
